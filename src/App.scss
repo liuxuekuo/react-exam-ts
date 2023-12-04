@@ -1,0 +1,15 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  .header_wrap {
+    background-color: bisque;
+  }
+  .nav_wrap {
+    background-color: blueviolet;
+  }
+  .outlet_wrap {
+    background-color: burlywood;
+  }
+}
