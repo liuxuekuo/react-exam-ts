@@ -1,5 +1,6 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import subjectReducer from './slice/subject';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 
 export type AppDispatch = typeof store.dispatch;
@@ -15,3 +16,6 @@ export const store = configureStore({
         subject: subjectReducer,
     },
 });
+// 只是加上了类型定义
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
