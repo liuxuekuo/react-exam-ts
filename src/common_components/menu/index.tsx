@@ -1,74 +1,33 @@
-import React, { useState } from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
+import { superAdminMenus } from '@/config';
+import { useNavigate } from 'react-router-dom';
+import { routersData,type RouterKeys } from '../../config';
+import usePathKey from '../../hooks/usePathKey';
 
-const items: MenuProps['items'] = [
-  {
-    label: 'Navigation One',
-    key: 'mail',
-    icon: <MailOutlined />,
-  },
-  {
-    label: 'Navigation Two',
-    key: 'app',
-    icon: <AppstoreOutlined />,
-    disabled: true,
-  },
-  {
-    label: 'Navigation Three - Submenu',
-    key: 'SubMenu',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
-      },
-      {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: (
-      <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-        Navigation Four - Link
-      </a>
-    ),
-    key: 'alipay',
-  },
-];
+const App: React.FC = () => {
+    const [current, setCurrent] = useState('');
+    const Navigate = useNavigate()
+    // 写死
+    const menus = superAdminMenus;
+    const path_key = usePathKey()
 
-const Menus: React.FC = () => {
-  const [current, setCurrent] = useState('mail');
+    useEffect(() => {
+        // setCurrent
 
-  const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
-    setCurrent(e.key);
-  };
+        if(path_key) {
+            setCurrent(path_key)
+        }
+    }, [])
 
-  return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
+    const onClick: MenuProps['onClick'] = (e) => {
+        setCurrent(e.key);
+        Navigate(routersData[e.key as RouterKeys].path)
+    };
+
+    return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={menus} />;
 };
 
-export default Menus;
+export default App;

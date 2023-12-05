@@ -1,15 +1,14 @@
 .layout {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 100%;
-  .header_wrap {
-    background-color: bisque;
+  .header_wrap{
+      height: 80px;
+      background: pink;
   }
+
   .nav_wrap {
-    background-color: blueviolet;
+
   }
-  .outlet_wrap {
-    background-color: burlywood;
+
+  .outlet_wrap{
+
   }
 }
