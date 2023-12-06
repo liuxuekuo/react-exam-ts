@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { RootState } from '../index'
 import { getUserInfoRequest, UserInfo, getMenuRequest, getStudentListRequest, getAdminListRequest, MenuData } from '@/util/request';
 
 export type PageList<T = any> = {

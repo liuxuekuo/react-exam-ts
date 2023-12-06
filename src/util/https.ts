@@ -10,7 +10,6 @@ const instance = axios.create({
 
 instance.interceptors.response.use(function (response) {
 
-    console.log('response.status', response.status)
 
     if (response.status === 200) {
         if (response.data.code === 401) {
