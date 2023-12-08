@@ -1,30 +1,46 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { routersData } from './config';
-import Layout from './common_components/layout';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 import Login from "@/pages/login";
 import AdminManage from '@/pages/admin_manage';
 import CorretExam from '@/pages/corret_exam';
-import CorretExamList from '@/pages/corret_exam_list';
-import Exam from '@/pages/exam';
-import ExamHistory from '@/pages/exam_history';
-import ExamSelect from '@/pages/exam_select';
-import PersonInfo from '@/pages/person_info';
-import ReadExam from '@/pages/read_exam';
-import StudentManage from '@/pages/student_manage';
-import StudentAdd from '@/pages/subject_add';
-import SubjectManage from '@/pages/subject_manage/index';
+import CorretExamList from './pages/corret_exam_list';
+import Exam from './pages/exam';
+import ExamHistory from './pages/exam_history';
+import ExamSelect from './pages/exam_select';
+import PersonInfo from './pages/person_info';
+import ReadExam from './pages/read_exam';
+import StudentManage from './pages/student_manage';
+import StudentAdd from './pages/subject_add';
+import SubjectManage from './pages/subject_manage/index';
 
 import './App.scss';
+import Layout from './common_components/layout';
+import { routersData } from "./config";
+import { useEffect } from 'react';
+import { useAppDispatch } from './app/hooks';
+import { get_user_info } from './store/slice/user';
+import EventBus from '@/util/event'
+
 
 function App() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    dispatch(get_user_info())
+
+    EventBus.on("global_not_login", function (msg) {
+      navigate('/login')
+    })
+  }, [])
+
   return (
     <Routes>
+      <Route path="/" element={<Navigate to={'/login'}></Navigate>}></Route>
+      {/* 页面1  登录 */}
+      <Route path={routersData.login.path} element={<Login />}></Route>
+      
       <Route element={<Layout />}>
-
-        <Route path="/" element={<Navigate to={'/login'}></Navigate>}></Route>
-        {/* 页面1  登录 */}
-        <Route path={routersData.login.path} element={<Login />}></Route>
         {/*页面12： 管理员管理 （超级管理员） */}
         <Route path={routersData.admin_manage.path} element={<AdminManage />}></Route>
         {/* 页面8： 批改试卷（管理员） */}

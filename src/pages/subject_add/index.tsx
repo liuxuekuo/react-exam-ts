@@ -1,69 +1,100 @@
-import styles from './index.module.css'
-import { TreeSelect, Button } from 'antd';
-import {useState,useEffect} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { get_subject_tree_async, select_subject_tree, set_subject_active_two, select_active_two, get_topic_two_list } from '../../store/slice/subject';
-import { AppDispatch } from '../../store/index';
-import RightContent from './rightContent';
-import LeftContent from './leftContent';
+import { TreeSelect, Button, Tag } from 'antd'
+import { ReactNode, useEffect, useMemo } from 'react'
+import SubjectDetail from './components/TopicDetail'
+import SubjectList from './components/TopicList'
+import styles from './index.module.scss'
+import './index.scss'
+import {
+	get_subject_tree_async,
+	select_subject_tree,
+	set_subject_active_two,
+	select_active_two,
+	get_topic_two_list,
+	LessonType,
+	select_active_topic,
+	set_subject_active_topic,
+} from '@/store/slice/subject'
+import { useAppDispatch, useAppSelector } from '@/store'
 
-
-function StudentAdd() {
-
-    const dispath:AppDispatch = useDispatch()
-    const treeData = useSelector(select_subject_tree)
-	
-    const active_two_obj: any = useSelector(select_active_two)
-
-    useEffect( () => {
-        dispath(get_subject_tree_async()).then((res) => {
-            // console.log('res', res)
-            const active_two_subject = res.payload[0].children[0]
-            dispath(set_subject_active_two(active_two_subject))
-        })
-    }, [])
-
-    useEffect(() => {
-        dispath(get_topic_two_list(active_two_obj.value))
-    }, [active_two_obj.value])
-
-    const onChange = (newValue: string, nameArr: any) => {
-        dispath(set_subject_active_two({
-            title: nameArr[0],
-            value: newValue
-        }))
-    };
-
-    return (
-        <div className={styles.wrap}>
-            <div className={styles.top}>
-                <div className={styles.top_left}>
-                    {active_two_obj.title}
-                </div>
-                <div className={styles.top_right}>
-                    <TreeSelect
-                        style={{ width: '100%' }}
-                        value={active_two_obj.value}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        treeData={treeData}
-                        placeholder="请选择课程类目"
-                        treeDefaultExpandAll
-                        onChange={onChange}
-                    />
-                </div>
-                <Button type="primary" className={styles.add_button}>新增题目</Button>
-
-            </div>
-            <div className={styles.content}>
-                <div className={styles.left}>
-                    <LeftContent />
-                </div>
-                <div className={styles.right}>
-                    {/* <RightContent /> */}
-                </div>
-            </div>
-        </div>
-    )
+// 禁用含有children字段的项
+const disableHasChildrenItem = (items: LessonType[]) => {
+	const _items = JSON.parse(JSON.stringify(items))
+	return _items.map((item: LessonType) => {
+		if (item.children?.length > 0) {
+			// @ts-ignore
+			item.disabled = true
+			item.children = disableHasChildrenItem(item.children)
+		}
+		return item
+	})
 }
 
-export default StudentAdd
+function SubjectAdd() {
+	const dispatch = useAppDispatch()
+	// 学科列表
+	const lessonList = useAppSelector(select_subject_tree)
+	console.log('SubjectAdd渲染')
+	// 学科列表memo 使父级不能选择
+	const lessonListMemo = lessonList.length ? disableHasChildrenItem(lessonList) : []
+	// 当前学科
+	const currentlesson = useAppSelector(select_active_two)
+	// 当前选择题目
+	const currentTopic = useAppSelector(select_active_topic)
+
+
+	// 获取学科列表
+	useEffect(() => {
+		dispatch(get_subject_tree_async()).then((res: any) => {
+			console.log('resss', res)
+			dispatch(set_subject_active_two(res.payload?.[0]?.children?.[0] as LessonType))
+		})
+	}, [])
+
+	// 获取题目列表
+	useEffect(() => {
+		if (!currentlesson?.value) return
+		dispatch(get_topic_two_list(currentlesson.value))
+	}, [currentlesson?.value])
+
+
+
+
+	// 选择学科
+	const handleLessonChange = (value: string, labelList: ReactNode[]) => {
+		dispatch(set_subject_active_topic(null))
+		dispatch(
+			set_subject_active_two({
+				title: labelList[0],
+				value: value,
+			})
+		)
+	}
+	// 新增题目
+	const addTopic = () => dispatch(set_subject_active_topic(null))
+
+	return (
+		<div className={styles.wrap}>
+			<div className="title-bar">
+				<p className="title">{currentlesson?.title}</p>
+				<div className="lesson-select">
+					<TreeSelect popupClassName={'subject-add-tree-select'} style={{ width: 320 }} treeDefaultExpandAll treeData={lessonListMemo} value={currentlesson?.value} onChange={handleLessonChange} />
+					<Button type="primary" onClick={addTopic}>
+						新增题目
+					</Button>
+				</div>
+			</div>
+
+			<div className="content">
+				<div className="left">
+					<SubjectList />
+				</div>
+				<div className="right">
+					<p className="title">题目详情{currentTopic ? <Tag color="orange">编辑</Tag> : <Tag color="blue">新增</Tag>}</p>
+					<SubjectDetail />
+				</div>
+			</div>
+		</div>
+	)
+}
+
+export default SubjectAdd

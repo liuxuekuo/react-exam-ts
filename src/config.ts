@@ -57,7 +57,7 @@ export const routersData = {
 export const studentMenus = [{
     label: '考题选择',
     key: 'exam_select',
-}, {
+},{
     label: '考试记录',
     key: 'exam_history',
 }]
