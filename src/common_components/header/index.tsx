@@ -30,8 +30,7 @@ export default function Header() {
 	return (
 		<div className={styles.wrap}>
 			<div className="logo" onClick={logo_click}>
-				<img src={logo} alt="九剑考试测评系统" />
-				<h1 style={{ fontSize: 0 }}>九剑考试测评系统</h1>
+				<div>业务员考试测评系统</div>
 			</div>
 			<div className="info">
 				<Popover
