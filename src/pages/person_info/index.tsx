@@ -11,6 +11,7 @@ import { select_user_info } from '@/store/slice/user'
 import { getImgUrl, upload_imgs } from '@/util'
 import dayjs from 'dayjs'
 import { get_user_info } from '../../store/slice/user';
+import { userInfoPatch } from '../../util/request';
 
 const eduOptions = ['初中', '高中', ' 大专', '成人本科', '专升本', '二本', '一本', '研究生']
 
@@ -27,11 +28,12 @@ type initUserType = {
 function PersonInfo() {
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
+
+
 	const userInfo = useAppSelector(select_user_info)
 
 	const [loading, setLoading] = useState(false)
 	const [fileList, setFileList] = useState<UploadFile[]>([])
-
 
 
 	// 是否是编辑
@@ -87,8 +89,9 @@ function PersonInfo() {
 			} else {
 				delete params.avatar
 			}
-
-			await axios.patch(`/api/user/${userInfo?._id}`, params)
+			// restful 
+			// await axios.patch(`/api/user/${userInfo?._id}`, params)
+			await userInfoPatch(userInfo._id, params)
 
 			if (!isEdit) {
 				message.success('个人信息录入成功')
@@ -219,16 +222,16 @@ function PersonInfo() {
 					</Form.Item>
 
 					<Form.Item
-						label="微信号"
+						label="v"
 						name="vChat"
 						rules={[
 							{
 								required: true,
-								message: '请输入微信号',
+								message: '请输入v',
 							},
 						]}
 					>
-						<Input placeholder="请输入微信号" />
+						<Input placeholder="请输入v" />
 					</Form.Item>
 
 					<Form.Item>

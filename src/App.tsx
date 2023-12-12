@@ -17,16 +17,17 @@ import './App.scss';
 import Layout from './common_components/layout';
 import { routersData } from "./config";
 import { useEffect } from 'react';
-import { useAppDispatch } from './app/hooks';
+
 import { get_user_info } from './store/slice/user';
 import EventBus from '@/util/event'
-
+import { useAppDispatch } from './store';
 
 function App() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
+    // 通用的配置  或者 用户信息等待接口   建议放在根组件
     dispatch(get_user_info())
 
     EventBus.on("global_not_login", function (msg) {

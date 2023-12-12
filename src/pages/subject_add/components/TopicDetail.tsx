@@ -3,9 +3,10 @@ import { UploadChangeParam, UploadFile, UploadProps } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
 import { upload_imgs } from '@/util'
 import request from '@/util/http'
-import { get_topic_two_list, select_active_topic, select_active_two, TopicType, set_subject_active_two, set_subject_active_topic } from '@/store/slice/subject'
+import { get_topic_two_list, select_active_topic, select_active_two, set_subject_active_two, set_subject_active_topic } from '@/store/slice/subject'
 import CustomUpload from '@/common_components/Upload'
 import { useAppDispatch, useAppSelector } from '@/store'
+import { TopicData } from '../../../util/request';
 
 export default function TopicDetail() {
 	const [loading, setLoading] = useState(false)
@@ -13,6 +14,8 @@ export default function TopicDetail() {
 
 
 	const currentlesson = useAppSelector(select_active_two)
+
+	console.log('currentlesson', currentlesson)
 	const currentTopic = useAppSelector(select_active_topic)
 
 
@@ -61,7 +64,7 @@ export default function TopicDetail() {
 	const handleImgChange: UploadProps['onChange'] = async (fileInfo: UploadChangeParam) => {
 		setFileList(fileInfo.fileList.map((item) => ({ ...item, status: 'done' })))
 	}
-	const submit = async (data: TopicType) => {
+	const submit = async (data: any) => {
 		setLoading(true)
 
 		if (fileList.length) {
@@ -104,13 +107,13 @@ export default function TopicDetail() {
 
 	return (
 		<Form form={form} autoComplete="off" name="subject-detail-form" labelCol={{ span: 2 }} scrollToFirstError onFinish={submit}>
-			<Form.Item<TopicType> label="题干" name="title" rules={[{ required: true, message: '题干必填' }]}>
+			<Form.Item label="题干" name="title" rules={[{ required: true, message: '题干必填' }]}>
 				<Input />
 			</Form.Item>
-			<Form.Item<TopicType> label="描述" name="dec">
+			<Form.Item label="描述" name="dec">
 				<Input.TextArea />
 			</Form.Item>
-			<Form.Item<TopicType> label="图片" name="img">
+			<Form.Item label="图片" name="img">
 				<CustomUpload
 					fileList={fileList}
 					uploadProps={{

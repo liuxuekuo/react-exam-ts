@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { routersData, type RouterKeys } from '../config';
+import { type RouterKeys } from '../config';
 import { useAppSelector } from '@/store';
-import { select_menu, MenuData } from '../store/slice/user';
+import { select_menu } from '@/store/slice/user';
 
 
 function useIsShowMenu() {
@@ -15,9 +15,9 @@ function useIsShowMenu() {
         return false
     }
     // debugger
-    const menu = memus.find((item: MenuData) => {
+    const menu = memus.find((item) => {
         return item.key === key
-    }) as MenuData
+    })
 
     // debugger
 

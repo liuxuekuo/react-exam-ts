@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { superAdminMenus } from '@/config';
 import { useNavigate } from 'react-router-dom';
-import { routersData,type RouterKeys } from '../../config';
-import usePathKey from '../../hooks/usePathKey';
-import { useAppDispatch, useAppSelector } from '../../store/index';
-import { get_menu_async, select_menu, MenuData } from '../../store/slice/user';
+import usePathKey from '@/hooks/usePathKey';
+import { useAppSelector } from '@/store/index';
+import { select_menu } from '@/store/slice/user';
 
 const App: React.FC = () => {
     const [current, setCurrent] = useState('');
@@ -28,7 +26,7 @@ const App: React.FC = () => {
     const onClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);
         console.log('e.key', e.key)
-        const path = menus.find((item: MenuData) => {
+        const path = menus.find((item) => {
             return item.key === e.key
         })?.path as string
 

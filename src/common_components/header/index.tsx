@@ -1,4 +1,5 @@
 import styles from './index.module.scss'
+import logo from './assets/logo.png'
 import avatar from './assets/avatar.png'
 import { useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Typography, Dropdown, List, Popover, Button, message } from 'antd'
@@ -6,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/store'
 import { select_user_info } from '@/store/slice/user'
 import { getImgUrl } from '@/util'
 import axios from '@/util/http'
+import { logoutRequest } from '../../util/request';
 
 const { Text } = Typography
 
@@ -15,15 +17,21 @@ export default function Header() {
 	const userInfo = useAppSelector(select_user_info)
 
 	async function logout() {
-		await axios.post('/api/user/logout')
+		await logoutRequest()
 		navigate('/login')
+	}
+
+	function logo_click() {
+		if(userInfo.role === 'student') {
+			navigate('/exam_history')
+		}
 	}
 
 	return (
 		<div className={styles.wrap}>
-			<div className="logo" onClick={() => {}}>
-				<img src={avatar} alt="考试测评系统" />
-				<h1 style={{ fontSize: 0 }}>考试测评系统</h1>
+			<div className="logo" onClick={logo_click}>
+				<img src={logo} alt="九剑考试测评系统" />
+				<h1 style={{ fontSize: 0 }}>九剑考试测评系统</h1>
 			</div>
 			<div className="info">
 				<Popover

@@ -10,16 +10,16 @@ import {
 	set_subject_active_two,
 	select_active_two,
 	get_topic_two_list,
-	LessonType,
 	select_active_topic,
 	set_subject_active_topic,
 } from '@/store/slice/subject'
 import { useAppDispatch, useAppSelector } from '@/store'
+import { SubjectData } from '../../util/request';
 
 // 禁用含有children字段的项
-const disableHasChildrenItem = (items: LessonType[]) => {
+const disableHasChildrenItem = (items: SubjectData[]) => {
 	const _items = JSON.parse(JSON.stringify(items))
-	return _items.map((item: LessonType) => {
+	return _items.map((item: SubjectData) => {
 		if (item.children?.length > 0) {
 			// @ts-ignore
 			item.disabled = true
@@ -41,12 +41,11 @@ function SubjectAdd() {
 	// 当前选择题目
 	const currentTopic = useAppSelector(select_active_topic)
 
-
 	// 获取学科列表
 	useEffect(() => {
 		dispatch(get_subject_tree_async()).then((res: any) => {
 			console.log('resss', res)
-			dispatch(set_subject_active_two(res.payload?.[0]?.children?.[0] as LessonType))
+			dispatch(set_subject_active_two(res.payload?.[0]?.children?.[0] as SubjectData))
 		})
 	}, [])
 
