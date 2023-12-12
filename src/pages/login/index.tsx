@@ -84,11 +84,12 @@ const LoginPage: React.FC = () => {
 							<img src={login_logo} alt="" />
 						</div>
 						<div className={style.title_container}>
-							<div>
-								<img src={login_title_cn} alt="" />
+							<div style={{fontSize:'40px',color:'gray',fontWeight:'bold'}}>
+								业务员考试系统
+								{/* <img src={login_title_cn} alt="" /> */}
 							</div>
 							<div>
-								<img src={login_title_en} alt="" />
+								{/* <img src={login_title_en} alt="" /> */}
 							</div>
 						</div>
 					</div>
